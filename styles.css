@@ -1,0 +1,290 @@
+:root {
+    --color-red: #d32f2f;
+    --color-red-dark: #b71c1c;
+    --color-white: #ffffff;
+    --color-black: #050505;
+    --color-glass: rgba(5, 5, 5, 0.6);
+    --color-glass-light: rgba(255, 255, 255, 0.1);
+    
+    --font-main: 'Outfit', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--color-black);
+    color: var(--color-white);
+    overflow: hidden; /* Videotron should never scroll */
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Typography */
+h1 {
+    font-size: 5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Sidebar Navigation (Hover to Expand) */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 300px;
+    background: var(--color-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid var(--color-glass-light);
+    transform: translateX(-95%);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebar:hover {
+    transform: translateX(0);
+}
+
+/* A visual cue that sidebar is there */
+#sidebar::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 40px;
+    background: var(--color-red);
+    border-radius: 4px 0 0 4px;
+}
+
+#sidebar:hover::after {
+    opacity: 0;
+}
+
+.sidebar-content {
+    padding: 2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--color-red);
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.nav-links li {
+    font-size: 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+}
+
+.nav-links li:hover {
+    background: var(--color-glass-light);
+    opacity: 1;
+    transform: translateX(10px);
+}
+
+.nav-links li.active {
+    background: linear-gradient(135deg, var(--color-red), var(--color-red-dark));
+    color: var(--color-white);
+    opacity: 1;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+}
+
+/* Main Content Wrapper */
+#main-content {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 10;
+}
+
+/* Salam Section */
+#salam {
+    background: radial-gradient(circle at center, #1a0505 0%, var(--color-black) 100%);
+    text-align: center;
+}
+
+#salam h1 {
+    color: var(--color-red);
+    text-shadow: 0 0 40px rgba(211, 47, 47, 0.5);
+    margin-bottom: 1rem;
+}
+
+#salam p {
+    font-size: 2rem;
+    color: #ccc;
+    font-weight: 300;
+}
+
+/* Kenangan Section */
+#kenangan {
+    background-color: var(--color-black);
+}
+
+#photo-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.memory-photo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1.1); /* For ken burns effect */
+}
+
+/* Video Player Overlay in Kenangan */
+.video-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 3rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+    z-index: 20;
+}
+
+.kenangan-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.progress-container {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--color-red);
+    border-radius: 4px;
+    box-shadow: 0 0 10px var(--color-red);
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: monospace;
+    font-size: 1.2rem;
+}
+
+/* Idle Section */
+#idle {
+    background: var(--color-black);
+    /* Poleng subtle pattern */
+    background-image: 
+      linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03)),
+      linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03));
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+}
+
+.glitch {
+    position: relative;
+    color: white;
+    font-size: 4rem;
+    letter-spacing: 5px;
+    animation: glitch-skew 1s infinite linear alternate-reverse;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--color-red);
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 #00ffff;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% { clip: rect(21px, 9999px, 94px, 0); }
+    20% { clip: rect(49px, 9999px, 35px, 0); }
+    40% { clip: rect(10px, 9999px, 42px, 0); }
+    60% { clip: rect(83px, 9999px, 6px, 0); }
+    80% { clip: rect(77px, 9999px, 16px, 0); }
+    100% { clip: rect(23px, 9999px, 63px, 0); }
+}
+
+@keyframes glitch-anim2 {
+    0% { clip: rect(65px, 9999px, 100px, 0); }
+    20% { clip: rect(27px, 9999px, 52px, 0); }
+    40% { clip: rect(98px, 9999px, 34px, 0); }
+    60% { clip: rect(43px, 9999px, 7px, 0); }
+    80% { clip: rect(15px, 9999px, 88px, 0); }
+    100% { clip: rect(54px, 9999px, 20px, 0); }
+}
