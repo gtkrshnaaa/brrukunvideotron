@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videotron Kemerdekaan - Desa</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts for Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+    <!-- Navigation Sidebar (Hover to Expand) -->
+    <nav id="sidebar">
+        <div class="sidebar-content">
+            <div class="logo">Dirgahayu</div>
+            <ul class="nav-links">
+                <li data-target="salam" class="active">Ucapan Salam</li>
+                <li data-target="kenangan">Kenangan</li>
+                <li data-target="idle">Idle Screen</li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="main-content">
+        
+        <!-- SECTION: UCAPAN SALAM -->
+        <section id="salam" class="page active">
+            <div class="content-wrapper">
+                <h1>Merdeka!</h1>
+                <p>Selamat Merayakan Hari Kemerdekaan ke-79</p>
+            </div>
+        </section>
+
+        <!-- SECTION: KENANGAN (Fokus Utama) -->
+        <section id="kenangan" class="page">
+            <div id="photo-container">
+                <!-- Photos will be injected here via JS -->
+            </div>
+            
+            <div class="video-overlay">
+                <h2 class="kenangan-title">Jejak Langkah Kita</h2>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="controls">
+                    <span id="time-indicator">00:00 / 00:00</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: IDLE SCREEN -->
+        <section id="idle" class="page">
+            <div class="content-wrapper">
+                <h1 class="glitch" data-text="Menunggu Acara Dimulai...">Menunggu Acara Dimulai...</h1>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
