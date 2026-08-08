@@ -430,7 +430,7 @@ document.querySelectorAll('.gapura-corner').forEach(el=>{
 const pages = { salam:document.getElementById('page-salam'),
                  kenangan:document.getElementById('page-kenangan'),
                  idle:document.getElementById('page-idle') };
-let currentPage = 'idle';
+let currentPage = 'salam';
 
 function switchPage(name){
   if(name===currentPage) return;
@@ -443,8 +443,8 @@ function switchPage(name){
 document.querySelectorAll('.nav-item').forEach(item=>{
   item.addEventListener('click', ()=> switchPage(item.dataset.page));
 });
-pages.idle.classList.add('active');
-document.querySelector('.nav-item[data-page="idle"]').classList.add('current');
+pages.salam.classList.add('active');
+document.querySelector('.nav-item[data-page="salam"]').classList.add('current');
 
 /* ======================================================================
    2) HALAMAN SALAM — partikel emas melayang (damar/lampion)
