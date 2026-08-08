@@ -595,7 +595,11 @@ function paintLayer(layer, img, photo, totalDurMs){
   img.style.setProperty('--s1',k.s1); img.style.setProperty('--s2',k.s2);
   img.style.setProperty('--x1',k.x1); img.style.setProperty('--y1',k.y1);
   img.style.setProperty('--x2',k.x2); img.style.setProperty('--y2',k.y2);
+  
+  // Clear old image instantly to prevent showing previous cycle's image
+  img.src = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
   img.src = photo.src;
+  
   img.style.filter = `saturate(1.06) contrast(1.03) hue-rotate(${photo.hue}deg)`;
   img.classList.remove('kb-anim');
   void img.offsetWidth; // reflow agar animasi restart
@@ -629,6 +633,11 @@ function showSlide(i){
   kbRemaining = kbDuration;
   clearTimeout(kbTimer);
   if(!kbPaused) kbTimer = setTimeout(()=>showSlide(kbIndex+1), kbDuration);
+
+  // Preload next photo into browser cache
+  const nextIdx = (kbIndex + 1) % PHOTOS.length;
+  const preloadImg = new Image();
+  preloadImg.src = PHOTOS[nextIdx].src;
 }
 
 function kbEnsureRunning(){
