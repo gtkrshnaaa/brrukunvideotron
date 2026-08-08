@@ -1,33 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // === NAVIGATION LOGIC ===
-    const navLinks = document.querySelectorAll(".nav-links li");
-    const pages = document.querySelectorAll(".page");
-
-    navLinks.forEach(link => {
-        link.addEventListener("click", () => {
-            // Update Active Link
-            navLinks.forEach(l => l.classList.remove("active"));
-            link.classList.add("active");
-
-            // Switch Page
-            const targetId = link.getAttribute("data-target");
-            pages.forEach(page => {
-                if (page.id === targetId) {
-                    page.classList.add("active");
-                } else {
-                    page.classList.remove("active");
-                }
-            });
-
-            // Pause/Play timeline based on page
-            if (targetId === "kenangan") {
-                if (mainTimeline) mainTimeline.play();
-            } else {
-                if (mainTimeline) mainTimeline.pause();
-            }
-        });
-    });
-
     // === KENANGAN ANIMATION LOGIC ===
     const photoContainer = document.getElementById("photo-container");
     const progressBar = document.getElementById("progress-bar");
@@ -43,24 +14,19 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < totalPhotos; i++) {
         const img = document.createElement("img");
         img.className = "memory-photo";
-        // Using unspalsh random with keyword 'indonesia,people,village' for variety
-        // Add random seed to avoid caching same image
         img.src = `https://source.unsplash.com/random/1920x1080/?indonesia,village,people&sig=${i}`;
         photoContainer.appendChild(img);
         photos.push(img);
     }
 
-    // Wait a brief moment for some images to start loading (in real app, preload them)
     // GSAP Timeline
     let mainTimeline = gsap.timeline({
-        paused: true,
         repeat: -1, // loop endlessly
         onUpdate: updateProgress
     });
 
     function buildTimeline() {
         photos.forEach((photo, index) => {
-            // Animation for each photo
             const t = gsap.timeline();
             
             // Fade in and scale (Ken Burns Effect)
