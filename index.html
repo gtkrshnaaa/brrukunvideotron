@@ -192,7 +192,7 @@ html,body{
   transition:opacity var(--fade-ms) ease-in-out;
 }
 .kb-layer.active{ opacity:1; z-index:5; }
-.kb-layer img{
+.kb-layer .kb-media{
   width:100%; height:100%; object-fit:cover; display:block;
   transform-origin:center center; will-change:transform;
   filter:saturate(1.06) contrast(1.03);
@@ -331,8 +331,8 @@ html,body{
     <!-- ================= HALAMAN 2: KENANGAN ================= -->
     <section id="page-kenangan" class="page">
       <div class="kb-eyebrow">Pangeling-eling Krama Banjar Dines Rukun, Desa Gumbrih</div>
-      <div id="kb-layer-a" class="kb-layer active"><img id="kb-img-a" alt=""></div>
-      <div id="kb-layer-b" class="kb-layer"><img id="kb-img-b" alt=""></div>
+      <div id="kb-layer-a" class="kb-layer active"><img id="kb-img-a" class="kb-media" alt=""></div>
+      <div id="kb-layer-b" class="kb-layer"><img id="kb-img-b" class="kb-media" alt=""></div>
       <div class="kb-vignette"></div>
       
       <div class="kb-progress-track"><div class="kb-progress-fill" id="kb-progress"></div></div>
@@ -561,6 +561,17 @@ const PHOTOS = [
   { src: "img/photo_6321090579017700037_w.jpg", hue: 0 },
   { src: "img/photo_6321090579017700038_w.jpg", hue: 0 },
   { src: "img/photo_6321090579017700039_w.jpg", hue: 0 },
+  { src: "img/photo_6325435144596033944_w.jpg", hue: 0 },
+  { src: "img/photo_6325435144596033945_w.jpg", hue: 0 },
+  { src: "video/document_6325435144136040711.mp4", hue: 0 },
+  { src: "video/document_6325435144136040712.mp4", hue: 0 },
+  { src: "video/document_6325435144136040713.mp4", hue: 0 },
+  { src: "video/document_6325435144136040714.mp4", hue: 0 },
+  { src: "video/document_6325435144136040715.mp4", hue: 0 },
+  { src: "video/document_6325435144136040716.mp4", hue: 0 },
+  { src: "video/document_6325435144136040718.mp4", hue: 0 },
+  { src: "video/document_6325435144136040720.mp4", hue: 0 },
+  { src: "video/document_6325435144136040721.mp4", hue: 0 },
 ];
 
 
@@ -574,8 +585,7 @@ let kbSlideStarted = 0;
 
 const layerA = document.getElementById('kb-layer-a');
 const layerB = document.getElementById('kb-layer-b');
-const imgA = document.getElementById('kb-img-a');
-const imgB = document.getElementById('kb-img-b');
+// imgA and imgB removed
 const kbProgress = document.getElementById('kb-progress');
 const kbCount = document.getElementById('kb-count');
 let activeIsA = true;
@@ -590,32 +600,44 @@ function randKB(){
   return {s1,s2,x1:'0%',y1:'0%',x2:dx,y2:dy};
 }
 
-function paintLayer(layer, img, photo, totalDurMs){
+function paintLayer(layer, photo, totalDurMs){
   const k = randKB();
-  img.style.setProperty('--s1',k.s1); img.style.setProperty('--s2',k.s2);
-  img.style.setProperty('--x1',k.x1); img.style.setProperty('--y1',k.y1);
-  img.style.setProperty('--x2',k.x2); img.style.setProperty('--y2',k.y2);
+  const isVideo = photo.src.endsWith('.mp4');
+  let media = layer.querySelector('.kb-media');
+  if(!media || media.tagName.toLowerCase() !== (isVideo ? 'video' : 'img')) {
+    if(media) media.remove();
+    media = document.createElement(isVideo ? 'video' : 'img');
+    media.className = 'kb-media';
+    if(isVideo) { media.muted = true; media.playsInline = true; media.loop = true; }
+    layer.appendChild(media);
+  }
   
-  // Clear old image instantly to prevent showing previous cycle's image
-  img.src = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
-  img.src = photo.src;
+  media.style.setProperty('--s1',k.s1); media.style.setProperty('--s2',k.s2);
+  media.style.setProperty('--x1',k.x1); media.style.setProperty('--y1',k.y1);
+  media.style.setProperty('--x2',k.x2); media.style.setProperty('--y2',k.y2);
   
-  img.style.filter = `saturate(1.06) contrast(1.03) hue-rotate(${photo.hue}deg)`;
-  img.classList.remove('kb-anim');
-  void img.offsetWidth; // reflow agar animasi restart
-  img.style.animationDuration = totalDurMs+'ms';
-  img.classList.add('kb-anim');
-  if(kbPaused) img.classList.add('paused');
+  if(!isVideo) media.src = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+  media.src = photo.src;
+  if(isVideo && media.play) { media.currentTime = 0; media.play().catch(e=>console.log(e)); }
+  
+  media.style.filter = `saturate(1.06) contrast(1.03) hue-rotate(${photo.hue || 0}deg)`;
+  media.classList.remove('kb-anim');
+  void media.offsetWidth; // reflow agar animasi restart
+  media.style.animationDuration = totalDurMs+'ms';
+  media.classList.add('kb-anim');
+  if(kbPaused) {
+    media.classList.add('paused');
+    if(isVideo) media.pause();
+  }
 }
 
 function showSlide(i){
   kbIndex = ((i % PHOTOS.length) + PHOTOS.length) % PHOTOS.length;
   const photo = PHOTOS[kbIndex];
   const nextLayer = activeIsA ? layerB : layerA;
-  const nextImg   = activeIsA ? imgB   : imgA;
   const prevLayer = activeIsA ? layerA : layerB;
 
-  paintLayer(nextLayer, nextImg, photo, kbDuration + kbFade);
+  paintLayer(nextLayer, photo, kbDuration + kbFade);
   nextLayer.classList.add('active');
   prevLayer.classList.remove('active');
   activeIsA = !activeIsA;
@@ -636,12 +658,15 @@ function showSlide(i){
 
   // Preload next photo into browser cache
   const nextIdx = (kbIndex + 1) % PHOTOS.length;
-  const preloadImg = new Image();
-  preloadImg.src = PHOTOS[nextIdx].src;
+  if(!PHOTOS[nextIdx].src.endsWith('.mp4')){
+    const preloadImg = new Image();
+    preloadImg.src = PHOTOS[nextIdx].src;
+  }
 }
 
 function kbEnsureRunning(){
-  if(imgA.src) return; // sudah berjalan
+  const mediaA = layerA.querySelector('.kb-media');
+  if(mediaA && mediaA.src && !mediaA.src.endsWith('=')) return; // sudah berjalan
   showSlide(0);
 }
 
@@ -652,15 +677,20 @@ const playBtn = document.getElementById('kb-play');
 playBtn.addEventListener('click', ()=>{
   kbPaused = !kbPaused;
   playBtn.textContent = kbPaused ? '▶' : '❚❚';
-  const curImg = activeIsA ? imgB : imgA; // layer yg baru saja jadi aktif
-  const curImg2 = document.querySelector('.kb-layer.active img');
+  const curMedia = document.querySelector('.kb-layer.active .kb-media');
   if(kbPaused){
-    curImg2.classList.add('paused');
+    if(curMedia) {
+      curMedia.classList.add('paused');
+      if(curMedia.tagName === 'VIDEO') curMedia.pause();
+    }
     kbProgress.classList.add('paused');
     clearTimeout(kbTimer);
     kbRemaining = Math.max(0, kbDuration - (performance.now()-kbSlideStarted));
   } else {
-    curImg2.classList.remove('paused');
+    if(curMedia) {
+      curMedia.classList.remove('paused');
+      if(curMedia.tagName === 'VIDEO') curMedia.play().catch(e=>console.log(e));
+    }
     kbProgress.classList.remove('paused');
     kbSlideStarted = performance.now() - (kbDuration-kbRemaining);
     kbTimer = setTimeout(()=>showSlide(kbIndex+1), kbRemaining);
